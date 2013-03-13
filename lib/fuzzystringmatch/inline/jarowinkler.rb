@@ -26,8 +26,8 @@ module FuzzyStringMatch
       builder.include '<iostream>'
       builder.add_compile_flags %q(-x c++)
       builder.add_link_flags %q(-lstdc++)
-      builder.c_raw 'int max( int a, int b ) { return ((a)>(b)?(a):(b)); }'
-      builder.c_raw 'int min( int a, int b ) { return ((a)<(b)?(a):(b)); }'
+      builder.c_raw 'long max( int a, int b ) { return ((a)>(b)?(a):(b)); }'
+      builder.c_raw 'long min( int a, int b ) { return ((a)<(b)?(a):(b)); }'
       builder.c_raw 'double double_min( double a, double b ) { return ((a)<(b)?(a):(b)); }'
       builder.c '
 double getDistance( char *s1, char *s2 )
