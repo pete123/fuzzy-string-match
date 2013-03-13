@@ -16,7 +16,7 @@
 #   limitations under the License.
 #
 module FuzzyStringMatch
-  require 'inline'
+  
   class JaroWinklerInline
     def pure?
       false
