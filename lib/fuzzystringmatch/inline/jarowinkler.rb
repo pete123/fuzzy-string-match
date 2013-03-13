@@ -26,8 +26,8 @@ module FuzzyStringMatch
       builder.include '<iostream>'
       builder.add_compile_flags %q(-x c++)
       builder.add_link_flags %q(-lstdc++)
-      builder.c_raw 'long max( int a, int b ) { return ((a)>(b)?(a):(b)); }'
-      builder.c_raw 'long min( int a, int b ) { return ((a)<(b)?(a):(b)); }'
+      builder.c_raw 'long max( long a, long b ) { return ((a)>(b)?(a):(b)); }'
+      builder.c_raw 'long min( long a, long b ) { return ((a)<(b)?(a):(b)); }'
       builder.c_raw 'double double_min( double a, double b ) { return ((a)<(b)?(a):(b)); }'
       builder.c '
 double getDistance( char *s1, char *s2 )
@@ -44,21 +44,21 @@ double getDistance( char *s1, char *s2 )
     _max = s2; _max_length = strlen(s2);
     _min = s1; _min_length = strlen(s1);
   }
-  int range = max( _max_length / 2 - 1, 0 );
+  long range = max( _max_length / 2 - 1, 0 );
 
   long indexes[_min_length];
   for( long i = 0 ; i < _min_length ; i++ ) {
     indexes[i] = -1;
   }
 
-  int flags[_max_length];
-  for( int i = 0 ; i < _max_length ; i++ ) {
+  long flags[_max_length];
+  for( long i = 0 ; i < _max_length ; i++ ) {
     flags[i] = 0;
   }
-  int matches = 0;
-  for (int mi = 0; mi < _min_length; mi++) {
+  long matches = 0;
+  for (long mi = 0; mi < _min_length; mi++) {
     char c1 = _min[mi];
-    for (int xi = max(mi - range, 0), xn = min(mi + range + 1, _max_length); xi < xn; xi++ ) {
+    for (long xi = max(mi - range, 0), xn = min(mi + range + 1, _max_length); xi < xn; xi++ ) {
       if (!flags[xi] && (c1 == _max[xi])) {
 	indexes[mi] = xi;
 	flags[xi] = 1;
@@ -70,28 +70,28 @@ double getDistance( char *s1, char *s2 )
 
   char ms1[matches];
   char ms2[matches];
-  int ms1_length = matches;
+  long ms1_length = matches;
 
-  for (int i = 0, si = 0; i < _min_length; i++) {
+  for (long i = 0, si = 0; i < _min_length; i++) {
     if (indexes[i] != -1) {
       ms1[si] = _min[i];
       si++;
     }
   }
-  for (int i = 0, si = 0; i < _max_length; i++) {
+  for (long i = 0, si = 0; i < _max_length; i++) {
     if (flags[i]) {
       ms2[si] = _max[i];
       si++;
     }
   }
-  int transpositions = 0;
-  for (int mi = 0; mi < ms1_length; mi++) {
+  long transpositions = 0;
+  for (long mi = 0; mi < ms1_length; mi++) {
     if (ms1[mi] != ms2[mi]) {
       transpositions++;
     }
   }
-  int prefix = 0;
-  for (int mi = 0; mi < _min_length; mi++) {
+  long prefix = 0;
+  for (long mi = 0; mi < _min_length; mi++) {
     if (s1[mi] == s2[mi]) {
       prefix++;
     } else {
@@ -103,7 +103,7 @@ double getDistance( char *s1, char *s2 )
   if (matches == 0) {
     return 0.0;
   }
-  int t = transpositions / 2;
+  long t = transpositions / 2;
   double j = ((m / strlen(s1) + m / strlen(s2) + (m - t) / m)) / 3;
   double jw = j < 0.7 ? j : j + double_min(0.1, 1.0 / _max_length) * prefix
     * (1 - j);
